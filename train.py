@@ -14,24 +14,24 @@ model_path = './models/bert-pretrain/'
 config = transformers.BertConfig.from_pretrained(model_path)
 model = BertQA.from_pretrained(model_path, config=config)
 model.to(device)
+# path to save model
+save_path = './models/'
+if not os.path.exists(save_path):
+    os.makedirs(save_path)
 
 
 batch_size = 128  # batch size
 max_length = 256  # max length of a sequence
+epoch_num = 40
+learning_rate = 1e-5
+adam_eps = 1e-8
+
+
 tokenizer = transformers.BertTokenizer.from_pretrained(model_path,do_lower_case=True)
 # load the train dataset
 train_file = load('data/WikiQA-train.tsv')
 train_dataset = tokenize(train_file, max_length, tokenizer, device)
 train_dataloader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size)
-
-
-epoch_num = 40
-learning_rate = 1e-5
-adam_eps = 1e-8
-# path to save model
-save_path = './models/'
-if not os.path.exists(save_path):
-    os.makedirs(save_path)
 
 
 # initialise the optimizer
